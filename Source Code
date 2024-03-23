@@ -1,0 +1,85 @@
+#include <stdio.h>
+
+//struktur tanggal
+struct tanggal 
+{
+    int hari;
+    int bulan;
+    int tahun;
+};
+
+//memeriksa apakah suatu tahun merupakan tahun kabisat
+int tahunKabisat(int tahun) 
+{
+    if((tahun % 4 == 0 && tahun % 100 != 0) || (tahun % 400 == 0)) 
+    {
+        return 1; // tahun kabisat
+    } else 
+    {
+        return 0; //bukan tahun kabisat
+    }
+}
+
+//mengetahui jumlah hari pada bulan
+int jumlahHari(int bulan, int tahun) 
+{
+    if(bulan == 2) 
+    {
+        return (tahunKabisat(tahun) ? 29 : 28);
+    } else if(bulan == 4 || bulan == 6 || bulan == 9 || bulan == 11) 
+    {
+        return 30;
+    } else 
+    {
+        return 31;
+    }
+}
+
+//menambahkan satu hari berikutnya pada tanggal yang diinput
+void besok(struct tanggal *tanggal) 
+{
+    int hari_bulan = jumlahHari(tanggal->bulan, tanggal->tahun);
+    if(tanggal->hari < hari_bulan) 
+    {
+        (tanggal->hari)++;
+    } else 
+    {
+        tanggal->hari = 1;
+        if(tanggal->bulan < 12) 
+        {
+            (tanggal->bulan)++;
+        } else 
+        {
+            tanggal->bulan = 1;
+            (tanggal->tahun)++;
+        }
+    }
+}
+
+int main() {
+    struct tanggal hariIni;
+
+    printf("Masukkan tanggal (format dd/mm/yyyy): ");
+    scanf("%d/%d/%d", &hariIni.hari, &hariIni.bulan, &hariIni.tahun);
+
+    //memeriksa tanggal yang diinput jika tidak valid
+    if(hariIni.hari < 1 || hariIni.hari > 31 || hariIni.bulan < 1 || hariIni.bulan > 12 || hariIni.tahun < 1) 
+    {
+        printf("Input tanggal tidak valid.\n");
+        return 1;
+    }
+
+    //memeriksa tanggal jika valid
+    if(hariIni.hari > jumlahHari(hariIni.bulan, hariIni.tahun)) 
+    {
+        printf("Input tanggal tidak valid untuk bulan dan tahun tersebut.\n");
+        return 1;
+    }
+
+    //menghitung hari berikutnya
+    besok(&hariIni);
+
+    printf("Tanggal selanjutnya: %d/%d/%d\n", hariIni.hari, hariIni.bulan, hariIni.tahun);
+
+    return 0;
+}
